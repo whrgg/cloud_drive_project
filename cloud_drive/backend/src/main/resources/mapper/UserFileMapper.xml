@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clouddrive.mapper.UserFileMapper">
+    
+    <!-- 获取用户文件列表 -->
+    <select id="selectUserFileList" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE user_id = #{userId} 
+        AND parent_id = #{parentId}
+        AND del_flag = 0
+        ORDER BY is_dir DESC, create_time DESC
+    </select>
+    
+    <!-- 获取用户回收站文件列表 -->
+    <select id="selectRecycleBinList" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE user_id = #{userId} 
+        AND del_flag = 1
+        AND (parent_id = 0 OR parent_id NOT IN (
+            SELECT id FROM user_file WHERE user_id = #{userId} AND del_flag = 1
+        ))
+        ORDER BY update_time DESC
+    </select>
+    
+    <!-- 检查文件名在同一目录下是否存在 -->
+    <select id="checkFileNameExists" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM user_file 
+        WHERE user_id = #{userId} 
+        AND parent_id = #{parentId} 
+        AND file_name = #{fileName}
+        AND del_flag = 0
+    </select>
+    
+    <!-- 更新删除标志 -->
+    <update id="updateDelFlag">
+        UPDATE user_file 
+        SET del_flag = #{delFlag}, 
+            update_time = NOW()
+        WHERE id = #{userFileId} 
+        AND user_id = #{userId}
+    </update>
+    
+    <!-- 清空回收站 -->
+    <update id="emptyRecycleBin">
+        UPDATE user_file 
+        SET del_flag = 2, 
+            update_time = NOW()
+        WHERE user_id = #{userId} 
+        AND del_flag = 1
+    </update>
+    
+    <!-- 根据文件ID和用户ID查询用户文件 -->
+    <select id="selectByFileIdAndUserId" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE file_id = #{fileId} 
+        AND user_id = #{userId}
+        AND del_flag = 0
+        LIMIT 1
+    </select>
+    
+    <!-- 获取文件夹中的所有子文件(包括子文件夹) -->
+    <select id="selectSubFiles" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE user_id = #{userId} 
+        AND parent_id = #{folderId}
+        AND del_flag = 0
+        ORDER BY is_dir DESC, create_time DESC
+    </select>
+    
+    <!-- 获取文件夹中的所有已删除子文件(包括回收站中的子文件夹) -->
+    <select id="selectDeletedSubFiles" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE user_id = #{userId} 
+        AND parent_id = #{folderId}
+        AND del_flag > 0
+        ORDER BY is_dir DESC, update_time DESC
+    </select>
+    
+    <!-- 更新收藏状态 -->
+    <update id="updateStarStatus">
+        UPDATE user_file 
+        SET is_starred = #{isStarred}, update_time = NOW() 
+        WHERE id = #{userFileId} 
+        AND user_id = #{userId}
+        AND del_flag = 0
+    </update>
+    
+    <!-- 获取用户收藏的文件列表 -->
+    <select id="selectStarredFiles" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE user_id = #{userId} 
+        AND is_starred = 1
+        AND del_flag = 0
+        ORDER BY update_time DESC
+    </select>
+    
+    <!-- 增加下载次数 -->
+    <update id="increaseDownloadCount">
+        UPDATE user_file 
+        SET download_count = download_count + 1, update_time = NOW() 
+        WHERE id = #{userFileId}
+    </update>
+    
+    <!-- 根据文件名、父ID和用户ID查找用户文件记录 -->
+    <select id="findUserFileByNameAndParent" resultType="com.clouddrive.model.entity.UserFile">
+        SELECT * FROM user_file 
+        WHERE user_id = #{userId} 
+        AND parent_id = #{parentId} 
+        AND file_name = #{fileName}
+        AND del_flag = 0
+        LIMIT 1
+    </select>
+    
+</mapper> 

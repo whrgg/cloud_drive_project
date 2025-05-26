@@ -1,0 +1,68 @@
+# Maven生成的文件
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE相关文件
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# 日志文件
+logs/
+*.log
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+
+# 本地配置文件（包含敏感信息）
+application-local.yml
+application-local.properties
+
+# 编译生成的文件
+*.class
+
+# 打包文件
+*.jar
+*.war
+*.ear
+
+# 虚拟机崩溃日志
+hs_err_pid*
+replay_pid*
+
+# MinIO数据目录
+minio-data/
+
+# 上传的临时文件
+upload-tmp/
+
+# .xcodemap
+.xcodemap/ 

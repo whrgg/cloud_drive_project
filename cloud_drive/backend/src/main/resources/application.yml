@@ -1,0 +1,77 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: cloud-drive
+  # 支持循环依赖（作为最后手段）
+  main:
+    allow-circular-references: true
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud_drive?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 10s
+  # RabbitMQ配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+# MyBatis Plus配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.clouddrive.model.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: AUTO
+      # 不对Share表设置通用的逻辑删除字段，而是在实体类中单独处理
+
+# MinIO对象存储配置
+minio:
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: cloud-drive
+
+# Elasticsearch配置
+elasticsearch:
+  host: localhost
+  port: 9200
+
+# 安全配置
+security:
+  jwt:
+    # 固定的JWT密钥，生产环境请使用更复杂的值
+    secret: cloud-drive-secure-jwt-key-for-authentication-please-change-in-production-environment
+    expiration: 86400000  # 24小时
+    header: Authorization
+    prefix: Bearer
+
+# 日志配置
+logging:
+  level:
+    root: info
+    com.clouddrive: info
+    org.springframework.beans.factory: info
+
+# 服务器配置
+server:
+  port: 8080 

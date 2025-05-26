@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clouddrive.mapper.ShareMapper">
+    
+    <!-- 根据分享码查询分享信息 -->
+    <select id="selectByShareCode" resultType="com.clouddrive.model.entity.Share">
+        SELECT * FROM share WHERE share_code = #{shareCode} AND status = 1 LIMIT 1
+    </select>
+    
+    <!-- 增加浏览次数 -->
+    <update id="increaseViewCount">
+        UPDATE share SET view_count = view_count + 1, update_time = NOW() WHERE id = #{shareId}
+    </update>
+    
+    <!-- 增加下载次数 -->
+    <update id="increaseDownloadCount">
+        UPDATE share SET download_count = download_count + 1, update_time = NOW() WHERE id = #{shareId}
+    </update>
+    
+</mapper> 

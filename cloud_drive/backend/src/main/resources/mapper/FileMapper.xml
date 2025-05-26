@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clouddrive.mapper.FileMapper">
+    
+    <!-- 根据MD5查询文件 -->
+    <select id="selectByMd5" resultType="com.clouddrive.model.entity.File">
+        SELECT * FROM file WHERE md5 = #{md5} AND status = 1 LIMIT 1
+    </select>
+    
+    <!-- 增加文件使用次数 -->
+    <update id="increaseUsageCount">
+        UPDATE file SET usage_count = usage_count + 1, update_time = NOW() WHERE id = #{fileId}
+    </update>
+    
+    <!-- 减少文件使用次数 -->
+    <update id="decreaseUsageCount">
+        UPDATE file SET usage_count = usage_count - 1, update_time = NOW() WHERE id = #{fileId} AND usage_count > 0
+    </update>
+    
+</mapper> 
